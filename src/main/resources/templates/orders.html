@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Orders - Order Management System</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 24px auto;
+            max-width: 1120px;
+            background: #f8f9fa;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            color: #0d6efd;
+            margin-bottom: 16px;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 16px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            margin-bottom: 16px;
+        }
+
+        form.inline {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: end;
+        }
+
+        label {
+            font-size: 13px;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        input {
+            padding: 8px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            min-width: 200px;
+        }
+
+        button, .btn-link {
+            background: #0d6efd;
+            color: #fff;
+            border: none;
+            padding: 8px 13px;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        button:hover, .btn-link:hover {
+            background: #0b5ed7;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        thead {
+            background: #e9ecef;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 10px;
+            border-bottom: 1px solid #f1f3f5;
+        }
+
+        tr:hover {
+            background: #fafbfc;
+        }
+
+        .status {
+            font-weight: 700;
+        }
+
+        .empty {
+            text-align: center;
+            color: #777;
+            padding: 16px;
+        }
+
+        .summary {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            font-size: 14px;
+        }
+
+        .summary strong {
+            color: #0d6efd;
+        }
+    </style>
+</head>
+<body>
+<h1>Orders</h1>
+
+<div class="card">
+    <!-- GET /orders/view?orderId= -->
+    <form class="inline" method="get" action="/orders/view">
+        <div>
+            <label for="orderId">Search by Order ID</label>
+            <input id="orderId" name="orderId" type="number" min="1" step="1" placeholder="e.g. 101">
+        </div>
+        <button type="submit">Fetch</button>
+        <a class="btn-link btn-secondary" href="/orders/view">Reset</a>
+        <a class="btn-link btn-secondary" href="/">Create New</a>
+    </form>
+</div>
+
+<div class="card">
+    <h2 style="margin-top: 0;">Order Summary</h2>
+    <div class="summary">
+        <div>Total Orders: <strong th:text="${totalOrders}">0</strong></div>
+        <div>Total Quantity: <strong th:text="${totalQuantity}">0</strong></div>
+        <div>Total Revenue: <strong th:text="${totalRevenue}">0.00</strong></div>
+        <div>Completed Orders: <strong th:text="${completedOrders}">0</strong></div>
+    </div>
+</div>
+
+<div class="card">
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Customer</th>
+            <th>Product</th>
+            <th>Qty</th>
+            <th>Unit Price</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Created At</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="order : ${orders}">
+            <td th:text="${order.id}">1</td>
+            <td th:text="${order.customerName}">Lee-Rhaan</td>
+            <td th:text="${order.itemName}">Keyboard</td>
+            <td th:text="${order.quantity}">2</td>
+            <td th:text="${order.unitPrice}">125.00</td>
+            <td th:text="${order.totalAmount}">250.00</td>
+            <td class="status" th:text="${order.status}">NEW</td>
+            <td th:text="${order.createdAt}">2026-06-25T10:00:00</td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(orders)}">
+            <td class="empty" colspan="8">No orders found.</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>To-Do List</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f5f7fa;
+            margin: 0;
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            padding: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        form.add-task {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        form.add-task input[type="text"] {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        form.add-task button {
+            background: #007bff;
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        form.add-task button:hover {
+            background: #0056b3;
+        }
+
+        ul {
+            padding-left: 0;
+            margin: 0;
+        }
+
+        li {
+            list-style: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 12px;
+            padding: 14px;
+            border: 1px solid #eee;
+            border-radius: 10px;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        li:hover {
+            background: #f9fafb;
+            transform: translateY(-2px);
+        }
+
+        .completed-bg {
+            background-color: #e6f7ed;
+        }
+
+        .task-name.completed {
+            text-decoration: line-through;
+            color: #777;
+        }
+
+        .task-name {
+            flex: 1;
+            font-size: 15px;
+        }
+
+        .task-controls {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .delete-btn {
+            background: #dc3545;
+            border: none;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .delete-btn:hover {
+            background: #a71d2a;
+        }
+
+        .analytics-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #007bff;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .analytics-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>My To-Do List</h1>
+
+    <!-- Add Task Form -->
+    <form class="add-task" action="/add" method="post">
+        <input type="text" name="name" placeholder="New Task" required>
+        <button type="submit">Add</button>
+    </form>
+
+    <!-- Todo List -->
+    <ul>
+        <li th:each="todo : ${todos}"
+            th:classappend="${todo.status.name() == 'COMPLETED'} ? 'completed-bg' : ''">
+
+            <!-- Task Name -->
+            <span th:text="${todo.name}"
+                  th:classappend="${todo.status.name() == 'COMPLETED'} ? 'task-name completed' : 'task-name'">
+            </span>
+
+            <!-- Controls -->
+            <div class="task-controls">
+                <form th:action="@{'/toggle/' + ${todo.id}}" method="post">
+                    <input type="checkbox"
+                           name="completed"
+                           th:checked="${todo.status.name() == 'COMPLETED'}"
+                           onchange="this.form.submit()" />
+                </form>
+
+                <form th:action="@{'/delete/' + ${todo.id}}" method="post">
+                    <button type="submit" class="delete-btn">Delete</button>
+                </form>
+            </div>
+        </li>
+    </ul>
+
+    <!-- Analytics Link -->
+    <a class="analytics-link" href="/analytics">View Analytics</a>
+</div>
+
+</body>
+</html>

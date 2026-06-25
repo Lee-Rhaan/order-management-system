@@ -1,0 +1,7 @@
+com\example\todoapp\repository\TodoRepository.class
+com\example\todoapp\service\TodoService.class
+com\example\todoapp\model\Todo$TodoBuilder.class
+com\example\todoapp\model\Todo$Status.class
+com\example\todoapp\model\Todo.class
+com\example\todoapp\TodoAppApplication.class
+com\example\todoapp\controller\TodoController.class

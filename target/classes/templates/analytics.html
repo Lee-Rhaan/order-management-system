@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Analytics</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px auto;
+            max-width: 800px;
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        h1 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        input[type="datetime-local"] {
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            gap: 20px;
+        }
+
+        .stat-box {
+            flex: 1;
+            background: #f1f3f5;
+            padding: 15px;
+            text-align: center;
+            border-radius: 6px;
+        }
+
+        .stat-box h2 {
+            margin: 0;
+            color: #007bff;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            text-decoration: none;
+            font-weight: bold;
+            color: #007bff;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Page heading -->
+<h1>📊 Analytics</h1>
+
+<!-- Date range filter form -->
+<div class="card">
+    <form method="get">
+        <label>From:</label>
+        <input type="datetime-local" name="start" th:value="${start}">
+
+        <label>To:</label>
+        <input type="datetime-local" name="end" th:value="${end}">
+
+        <button type="submit">Filter</button>
+    </form>
+</div>
+
+<!-- Stats display -->
+<div class="card stats">
+    <div class="stat-box">
+        <p>Tasks Created</p>
+        <h2 th:text="${createdCount}">0</h2>
+    </div>
+    <div class="stat-box">
+        <p>Tasks Completed</p>
+        <h2 th:text="${completedCount}">0</h2>
+    </div>
+</div>
+
+<!-- Navigation -->
+<a class="back-link" href="/">⬅ Back to To-Do List</a>
+
+</body>
+</html>

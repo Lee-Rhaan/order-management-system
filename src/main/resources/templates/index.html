@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Order Management System</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 24px auto;
+            max-width: 980px;
+            background: #f8f9fa;
+            color: #333;
+            line-height: 1.5;
+        }
+
+        h1 {
+            text-align: center;
+            color: #0d6efd;
+            margin-bottom: 16px;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 18px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            margin-bottom: 18px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(220px, 1fr));
+            gap: 12px;
+        }
+
+        label {
+            font-size: 13px;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+
+        .actions {
+            margin-top: 12px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        button, .btn-link {
+            background: #0d6efd;
+            color: white;
+            border: none;
+            padding: 9px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        button:hover, .btn-link:hover {
+            background: #0b5ed7;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .error-banner {
+            background: #fde2e1;
+            color: #8a1c1a;
+            padding: 10px 12px;
+            border-radius: 6px;
+            margin-bottom: 14px;
+        }
+
+        .ok-banner {
+            background: #e3f6ea;
+            color: #1f6b39;
+            padding: 10px 12px;
+            border-radius: 6px;
+            margin-bottom: 14px;
+        }
+
+        .hint {
+            font-size: 12px;
+            color: #666;
+            margin-top: 6px;
+        }
+    </style>
+</head>
+<body>
+<h1>Order Management System</h1>
+
+<div class="card">
+    <h2>Create Order</h2>
+
+    <!-- Flash error set by controller on validation/business failures -->
+    <div class="error-banner" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+    <div class="ok-banner" th:if="${successMessage}" th:text="${successMessage}"></div>
+
+    <!-- POST /orders -->
+    <form method="post" action="/orders">
+        <div class="grid">
+            <div>
+                <label for="customerName">Customer Name</label>
+                <input id="customerName" name="customerName" type="text" required>
+            </div>
+
+            <div>
+                <label for="itemName">Item Name</label>
+                <input id="itemName" name="itemName" type="text" required>
+            </div>
+
+            <div>
+                <label for="quantity">Quantity</label>
+                <input id="quantity" name="quantity" type="number" min="1" step="1" required>
+            </div>
+
+            <div>
+                <label for="unitPrice">Unit Price</label>
+                <input id="unitPrice" name="unitPrice" type="number" min="0.01" step="0.01" required>
+            </div>
+
+            <div>
+                <label for="status">Status</label>
+                <select id="status" name="status" required>
+                    <option value="NEW">NEW</option>
+                    <option value="PROCESSING">PROCESSING</option>
+                    <option value="COMPLETED">COMPLETED</option>
+                    <option value="CANCELLED">CANCELLED</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button type="submit">Create Order</button>
+            <a class="btn-link btn-secondary" href="/orders/view">View Orders</a>
+        </div>
+        <p class="hint">This submits to the same create endpoint used by REST clients.</p>
+    </form>
+</div>
+</body>
+</html>
