@@ -1,4 +1,4 @@
-com\example\todoapp\api\integration\TodoIntegrationTest.class
-com\example\todoapp\TodoApplicationTests.class
-com\example\todoapp\api\service\TodoServiceTest.class
-com\example\todoapp\api\TodoControllerTest.class
+com\example\order\api\integration\OrderIntegrationTest.class
+com\example\order\OrderApplicationTests.class
+com\example\order\api\OrderControllerTest.class
+com\example\order\api\service\OrderServiceTest.class

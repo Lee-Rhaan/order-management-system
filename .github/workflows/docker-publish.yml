@@ -44,7 +44,7 @@ jobs:
       - name: Build, test & analyze with SonarCloud
         run: |
           mvn clean verify sonar:sonar \
-            -Dsonar.projectKey=lee-rhaan_todo-app \
+            -Dsonar.projectKey=Lee-Rhaan_order-management-system \
             -Dsonar.organization=lee-rhaan \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.login=${{ secrets.SONAR_TOKEN }}
@@ -98,14 +98,14 @@ jobs:
       # Step 7: Build Docker image (tagged with today's date and "latest")
       - name: Build Docker Image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/spring-todo-app:${{ env.IMAGE_TAG }} .
-          docker tag ${{ secrets.DOCKER_USERNAME }}/spring-todo-app:${{ env.IMAGE_TAG }} ${{ secrets.DOCKER_USERNAME }}/spring-todo-app:latest
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/order-management-system:${{ env.IMAGE_TAG }} .
+          docker tag ${{ secrets.DOCKER_USERNAME }}/order-management-system:${{ env.IMAGE_TAG }} ${{ secrets.DOCKER_USERNAME }}/order-management-system:latest
 
       # Step 8: Push both tags to Docker Hub
       - name: Push Docker Image
         run: |
-          docker push ${{ secrets.DOCKER_USERNAME }}/spring-todo-app:${{ env.IMAGE_TAG }}
-          docker push ${{ secrets.DOCKER_USERNAME }}/spring-todo-app:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/order-management-system:${{ env.IMAGE_TAG }}
+          docker push ${{ secrets.DOCKER_USERNAME }}/order-management-system:latest
 
       # Step 9: Trigger redeploy on Render using deploy hook
       - name: Trigger Render Deploy Hook

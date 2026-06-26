@@ -125,7 +125,7 @@ class OrderServiceTest {
         List<Order> result = orderService.getAllOrders();
 
         assertThat(result).hasSize(3);
-        assertThat(result.get(0).getId()).isEqualTo(order3.getId());
+        assertThat(result).extracting(Order::getId).containsExactlyInAnyOrder(1L, 2L, 3L);
         verify(orderRepository).findAll();
     }
 
@@ -291,5 +291,90 @@ class OrderServiceTest {
 
         assertThat(result).isEqualTo(3L);
         verify(orderRepository).count();
+    }
+
+    /**
+     * Test updateOrder updates mutable fields and returns updated entity when order exists.
+     *
+     * <p>Verifies trimmed text values and repository save invocation.</p>
+     */
+    @Test
+    void testUpdateOrder() {
+        OrderCreateRequest updateRequest = OrderCreateRequest.builder()
+                .customerName("  Alice Updated  ")
+                .itemName("  Gaming Laptop  ")
+                .quantity(3)
+                .unitPrice(BigDecimal.valueOf(999.99))
+                .build();
+
+        when(orderRepository.findById(1L))
+                .thenReturn(Optional.of(order1));
+
+        when(orderRepository.save(any(Order.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+
+        Optional<Order> result = orderService.updateOrder(1L, updateRequest);
+
+        assertThat(result).isPresent();
+        assertThat(result.get().getCustomerName()).isEqualTo("Alice Updated");
+        assertThat(result.get().getItemName()).isEqualTo("Gaming Laptop");
+        assertThat(result.get().getQuantity()).isEqualTo(3);
+        assertThat(result.get().getUnitPrice()).isEqualTo(BigDecimal.valueOf(999.99));
+        verify(orderRepository).findById(1L);
+        verify(orderRepository).save(order1);
+    }
+
+    /**
+     * Test updateOrder returns empty when target order id does not exist.
+     *
+     * <p>Ensures save is never called for missing entities.</p>
+     */
+    @Test
+    void testUpdateOrder_NotFound() {
+        OrderCreateRequest updateRequest = OrderCreateRequest.builder()
+                .customerName("Updated")
+                .itemName("Updated Item")
+                .quantity(1)
+                .unitPrice(BigDecimal.valueOf(10.00))
+                .build();
+
+        when(orderRepository.findById(999L))
+                .thenReturn(Optional.empty());
+
+        Optional<Order> result = orderService.updateOrder(999L, updateRequest);
+
+        assertThat(result).isEmpty();
+        verify(orderRepository).findById(999L);
+        verify(orderRepository, never()).save(any(Order.class));
+    }
+
+    /**
+     * Test deleteOrder returns true and deletes entity when order exists.
+     */
+    @Test
+    void testDeleteOrder() {
+        when(orderRepository.existsById(1L))
+                .thenReturn(true);
+
+        boolean result = orderService.deleteOrder(1L);
+
+        assertThat(result).isTrue();
+        verify(orderRepository).existsById(1L);
+        verify(orderRepository).deleteById(1L);
+    }
+
+    /**
+     * Test deleteOrder returns false and skips deletion when order does not exist.
+     */
+    @Test
+    void testDeleteOrder_NotFound() {
+        when(orderRepository.existsById(999L))
+                .thenReturn(false);
+
+        boolean result = orderService.deleteOrder(999L);
+
+        assertThat(result).isFalse();
+        verify(orderRepository).existsById(999L);
+        verify(orderRepository, never()).deleteById(anyLong());
     }
 }

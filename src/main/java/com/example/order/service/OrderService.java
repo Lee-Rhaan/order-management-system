@@ -100,6 +100,43 @@ public class OrderService {
     }
 
     /**
+     * Updates mutable fields of an existing order.
+     *
+     * @param id order identifier
+     * @param request validated request DTO
+     * @return Optional wrapping updated order if found
+     */
+    public Optional<Order> updateOrder(Long id, OrderCreateRequest request) {
+        return orderRepository.findById(id).map(order -> {
+            order.setCustomerName(request.getCustomerName().trim());
+            order.setItemName(request.getItemName().trim());
+            order.setQuantity(request.getQuantity());
+            order.setUnitPrice(request.getUnitPrice());
+
+            Order updated = orderRepository.save(order);
+            log.info("Order updated: id={} customer='{}' item='{}' qty={} unitPrice={} total={}",
+                    updated.getId(), updated.getCustomerName(), updated.getItemName(),
+                    updated.getQuantity(), updated.getUnitPrice(), updated.getTotalAmount());
+            return updated;
+        });
+    }
+
+    /**
+     * Deletes an order by ID.
+     *
+     * @param id order identifier
+     * @return true if deleted, false if not found
+     */
+    public boolean deleteOrder(Long id) {
+        if (!orderRepository.existsById(id)) {
+            return false;
+        }
+        orderRepository.deleteById(id);
+        log.info("Order deleted: id={}", id);
+        return true;
+    }
+
+    /**
      * Counts orders grouped by their status using Java Streams.
      *
      * @return map of Status → count

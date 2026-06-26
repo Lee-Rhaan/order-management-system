@@ -5,7 +5,7 @@ services:
     container_name: mysqldb
     environment:
       MYSQL_ROOT_PASSWORD: 12345
-      MYSQL_DATABASE: employee_db
+      MYSQL_DATABASE: order_db
     ports:
       - "3306:3306"
     volumes:
@@ -18,7 +18,7 @@ services:
       - "8080:8080" #Map host port 8080 to container port 8080
     environment:
       MYSQL_HOST: mysqldb #Use the service name of the MySQL container
-      MYSQL_DATABASE: employee_db
+      MYSQL_DATABASE: order_db
       MYSQL_USER: root
       MYSQL_PASSWORD: 12345
     depends_on:

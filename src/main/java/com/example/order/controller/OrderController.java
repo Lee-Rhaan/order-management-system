@@ -170,6 +170,81 @@ public class OrderController {
     }
 
     /**
+     * PUT /api/orders/{id} — Updates an existing order.
+     *
+     * @param id order identifier
+     * @param request validated payload
+     * @return updated order response
+     */
+    @PutMapping("/api/orders/{id}")
+    @ResponseBody
+    public OrderResponse updateOrderApi(@PathVariable Long id, @Valid @RequestBody OrderCreateRequest request) {
+        return orderService.updateOrder(id, request)
+                .map(OrderResponse::fromEntity)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        String.format("Order #%d not found for update", id)
+                ));
+    }
+
+    /**
+     * DELETE /api/orders/{id} — Deletes an order.
+     *
+     * @param id order identifier
+     */
+    @DeleteMapping("/api/orders/{id}")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteOrderApi(@PathVariable Long id) {
+        boolean deleted = orderService.deleteOrder(id);
+        if (!deleted) {
+            throw new ResourceNotFoundException(String.format("Order #%d not found for delete", id));
+        }
+    }
+
+    /**
+     * POST /orders/{id}/status — Updates status from UI row action.
+     *
+     * @param id order identifier
+     * @param status new status value
+     * @param redirectAttributes flash attrs
+     * @return redirect to order view page
+     */
+    @PostMapping("/orders/{id}/status")
+    public String updateOrderStatusFromUi(
+            @PathVariable Long id,
+            @RequestParam Order.Status status,
+            RedirectAttributes redirectAttributes
+    ) {
+        orderService.updateStatus(id, status)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        String.format("Order #%d not found for status update", id)
+                ));
+
+        redirectAttributes.addFlashAttribute("successMessage",
+                String.format("Order #%d status updated to %s.", id, status));
+        return "redirect:/orders/view";
+    }
+
+    /**
+     * POST /orders/{id}/delete — Deletes order from UI row action.
+     *
+     * @param id order identifier
+     * @param redirectAttributes flash attrs
+     * @return redirect to order view page
+     */
+    @PostMapping("/orders/{id}/delete")
+    public String deleteOrderFromUi(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        boolean deleted = orderService.deleteOrder(id);
+        if (!deleted) {
+            throw new ResourceNotFoundException(String.format("Order #%d not found for delete", id));
+        }
+
+        redirectAttributes.addFlashAttribute("successMessage",
+                String.format("Order #%d deleted successfully.", id));
+        return "redirect:/orders/view";
+    }
+
+    /**
      * GET /api/orders/{id} — Fetches one order by ID.
      *
      * @param id order identifier

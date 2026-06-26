@@ -1,182 +1,156 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>To-Do List</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-
+    <title>Order Management System</title>
+    <meta charset="UTF-8">
     <style>
         body {
-            font-family: 'Inter', sans-serif;
-            background: #f5f7fa;
-            margin: 0;
-            padding: 40px;
-            display: flex;
-            justify-content: center;
-        }
-
-        .container {
-            max-width: 600px;
-            width: 100%;
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-            padding: 30px;
+            font-family: Arial, sans-serif;
+            margin: 24px auto;
+            max-width: 980px;
+            background: #f8f9fa;
+            color: #333;
+            line-height: 1.5;
         }
 
         h1 {
             text-align: center;
-            margin-bottom: 20px;
-            font-weight: 600;
-            color: #333;
+            color: #0d6efd;
+            margin-bottom: 16px;
         }
 
-        form.add-task {
+        .card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 18px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            margin-bottom: 18px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(220px, 1fr));
+            gap: 12px;
+        }
+
+        label {
+            font-size: 13px;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+
+        .actions {
+            margin-top: 12px;
             display: flex;
             gap: 10px;
-            margin-bottom: 20px;
+            align-items: center;
         }
 
-        form.add-task input[type="text"] {
-            flex: 1;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
+        button, .btn-link {
+            background: #0d6efd;
+            color: white;
+            border: none;
+            padding: 9px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
             font-size: 14px;
         }
 
-        form.add-task button {
-            background: #007bff;
-            border: none;
-            color: white;
-            padding: 12px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
+        button:hover, .btn-link:hover {
+            background: #0b5ed7;
         }
 
-        form.add-task button:hover {
-            background: #0056b3;
+        .btn-secondary {
+            background: #6c757d;
         }
 
-        ul {
-            padding-left: 0;
-            margin: 0;
+        .btn-secondary:hover {
+            background: #5a6268;
         }
 
-        li {
-            list-style: none;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            margin-bottom: 12px;
-            padding: 14px;
-            border: 1px solid #eee;
-            border-radius: 10px;
-            transition: background-color 0.2s ease, transform 0.1s ease;
-        }
-
-        li:hover {
-            background: #f9fafb;
-            transform: translateY(-2px);
-        }
-
-        .completed-bg {
-            background-color: #e6f7ed;
-        }
-
-        .task-name.completed {
-            text-decoration: line-through;
-            color: #777;
-        }
-
-        .task-name {
-            flex: 1;
-            font-size: 15px;
-        }
-
-        .task-controls {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-
-        input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-        }
-
-        .delete-btn {
-            background: #dc3545;
-            border: none;
-            color: white;
-            padding: 6px 12px;
+        .error-banner {
+            background: #fde2e1;
+            color: #8a1c1a;
+            padding: 10px 12px;
             border-radius: 6px;
-            cursor: pointer;
-            font-size: 13px;
+            margin-bottom: 14px;
         }
 
-        .delete-btn:hover {
-            background: #a71d2a;
+        .ok-banner {
+            background: #e3f6ea;
+            color: #1f6b39;
+            padding: 10px 12px;
+            border-radius: 6px;
+            margin-bottom: 14px;
         }
 
-        .analytics-link {
-            display: block;
-            text-align: center;
-            margin-top: 20px;
-            color: #007bff;
-            font-weight: 600;
-            text-decoration: none;
-        }
-
-        .analytics-link:hover {
-            text-decoration: underline;
+        .hint {
+            font-size: 12px;
+            color: #666;
+            margin-top: 6px;
         }
     </style>
 </head>
 <body>
+<h1>Order Management System</h1>
 
-<div class="container">
-    <h1>My To-Do List</h1>
+<div class="card">
+    <h2>Create Order</h2>
 
-    <!-- Add Task Form -->
-    <form class="add-task" action="/add" method="post">
-        <input type="text" name="name" placeholder="New Task" required>
-        <button type="submit">Add</button>
-    </form>
+    <!-- Flash error set by controller on validation/business failures -->
+    <div class="error-banner" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+    <div class="ok-banner" th:if="${successMessage}" th:text="${successMessage}"></div>
 
-    <!-- Todo List -->
-    <ul>
-        <li th:each="todo : ${todos}"
-            th:classappend="${todo.status.name() == 'COMPLETED'} ? 'completed-bg' : ''">
-
-            <!-- Task Name -->
-            <span th:text="${todo.name}"
-                  th:classappend="${todo.status.name() == 'COMPLETED'} ? 'task-name completed' : 'task-name'">
-            </span>
-
-            <!-- Controls -->
-            <div class="task-controls">
-                <form th:action="@{'/toggle/' + ${todo.id}}" method="post">
-                    <input type="checkbox"
-                           name="completed"
-                           th:checked="${todo.status.name() == 'COMPLETED'}"
-                           onchange="this.form.submit()" />
-                </form>
-
-                <form th:action="@{'/delete/' + ${todo.id}}" method="post">
-                    <button type="submit" class="delete-btn">Delete</button>
-                </form>
+    <!-- POST /orders -->
+    <form method="post" action="/orders">
+        <div class="grid">
+            <div>
+                <label for="customerName">Customer Name</label>
+                <input id="customerName" name="customerName" type="text" required>
             </div>
-        </li>
-    </ul>
 
-    <!-- Analytics Link -->
-    <a class="analytics-link" href="/analytics">View Analytics</a>
+            <div>
+                <label for="itemName">Item Name</label>
+                <input id="itemName" name="itemName" type="text" required>
+            </div>
+
+            <div>
+                <label for="quantity">Quantity</label>
+                <input id="quantity" name="quantity" type="number" min="1" step="1" required>
+            </div>
+
+            <div>
+                <label for="unitPrice">Unit Price</label>
+                <input id="unitPrice" name="unitPrice" type="number" min="0.01" step="0.01" required>
+            </div>
+
+            <div>
+                <label for="status">Status</label>
+                <select id="status" name="status" required>
+                    <option value="NEW">NEW</option>
+                    <option value="PROCESSING">PROCESSING</option>
+                    <option value="COMPLETED">COMPLETED</option>
+                    <option value="CANCELLED">CANCELLED</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button type="submit">Create Order</button>
+            <a class="btn-link btn-secondary" href="/orders/view">View Orders</a>
+        </div>
+        <p class="hint">This submits to the same create endpoint used by REST clients.</p>
+    </form>
 </div>
-
 </body>
 </html>
