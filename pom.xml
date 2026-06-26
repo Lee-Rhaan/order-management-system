@@ -24,6 +24,7 @@
         <sonar.organization>lee-rhaan</sonar.organization>
         <sonar.projectKey>lee-rhaan_order-management-system</sonar.projectKey>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <finalName>order-management-system</finalName>
     </properties>
 
     <dependencies>
