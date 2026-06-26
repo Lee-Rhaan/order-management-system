@@ -1,5 +1,4 @@
-### Spring Boot Todo App — CI/CD with GitHub Actions, Docker Hub & Render (PostgreSQL)
-![Build Status](https://github.com/Lee-Rhaan/Todo-app/actions/workflows/docker-publish.yml/badge.svg)
+### Spring Boot Order Management System — CI/CD with GitHub Actions, Docker Hub & Render (PostgreSQL)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=Lee-Rhaan_order-management-system&metric=coverage)](https://sonarcloud.io/summary/new_code?id=Lee-Rhaan_order-management-system)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Lee-Rhaan_order-management-system&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Lee-Rhaan_order-management-system)
 
@@ -14,7 +13,7 @@
 ---
 ### Role: Solo developer (design, build, CI/CD, quality gates, deployment)
 ##### PROJECT LINK:
-https://spring-employee-app-p2v0.onrender.com
+https://order-management-system-inoe.onrender.com
 
 ---
 
@@ -42,7 +41,7 @@ Hardened the pipeline and runtime: least-privilege tokens, secret-based auth, im
 ### The Story & Decisions (detailed, step-by-step)
 #### Baseline app & initial constraints
 ##### Starting point:
-> A Java Spring Boot + Thymeleaf Todo app with MySQL, built with Maven.
+> A Java Spring Boot + Thymeleaf Order Management System with MySQL, built with Maven.
 
 ##### Constraint:
 > Local machine storage was limited; builds and image creation had to run entirely in the cloud.
