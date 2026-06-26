@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.example.todoapp.api.service.TodoServiceTest
--------------------------------------------------------------------------------
-Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.394 s -- in com.example.todoapp.api.service.TodoServiceTest
